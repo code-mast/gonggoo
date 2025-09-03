@@ -32,7 +32,7 @@ export default function LoginScreen() {
 
   // 인증번호 전송
   const handleSendCode = () => {
-    if (phone.length < 10 || phone.length > 11) {
+    if (phone.length < 10 || phone.length > 11 || phone.slice(0, 3) !== '010') {
       setError('앗, 휴대폰 번호가 맞지 않아요.');
       return;
     }
@@ -57,8 +57,17 @@ export default function LoginScreen() {
       return;
     }
     setError('');
+    setStep('code');
+    setTimeLeft(300);
     // TODO: Java 서버 API 호출 → 인증번호 검증
   };
+
+  // 인증번호 재전송 (API와 구성필요)
+  /* const resendCode = () => {
+    if () {
+      
+    }
+  } */
 
   return (
     <View style={styles.container}>
@@ -70,7 +79,7 @@ export default function LoginScreen() {
       {step === 'phone' ? (
         <>
           <Text style={styles.title}>휴대폰 번호로 가입해주세요.</Text>
-          <Text style={styles.subtitle}>휴대폰 번호</Text>
+          <Text style={[styles.subtitle, error ? styles.errorLabel: null]}>휴대폰 번호</Text>
 
           {/* 휴대폰 번호 입력칸 + X 버튼 */}
           <View style={styles.inputWrapper}>
@@ -107,7 +116,8 @@ export default function LoginScreen() {
         </>
       ) : (
         <>
-          <Text style={styles.title}>인증번호를 입력해 주세요</Text>
+          <Text style = {styles.title}>인증번호를 입력해 주세요</Text>
+          <Text style = {[styles.subtitle, error ? styles.errorLabel: null]}>인증번호</Text>
 
           <TextInput
             style={[styles.input, error ? styles.inputError : null]}
@@ -123,6 +133,20 @@ export default function LoginScreen() {
           {/* 남은 시간 */}
           <Text style={styles.timer}>{formatTime(timeLeft)}</Text>
 
+          {/* 인증번호 재전송 버튼 (비활성화) */}
+          <Pressable style={styles.resendButton} onPress={handleSendCode}>
+            <Text style={styles.resendButtonText}>인증번호 재전송</Text>
+          </Pressable>
+
+          {/* 인증번호 오지 않는 경우 해결방안 (디자인팀과 상의/구현 필요)*/}
+          <Pressable>
+            <Text style={styles.resend}>인증번호가 오지 않나요?</Text>
+          </Pressable>
+
+
+
+
+
           <Pressable
             style={[
               styles.button,
@@ -132,10 +156,6 @@ export default function LoginScreen() {
             onPress={handleVerifyCode}
           >
             <Text style={styles.buttonText}>완료</Text>
-          </Pressable>
-
-          <Pressable onPress={handleSendCode}>
-            <Text style={styles.resend}>인증번호가 오지 않았나요?</Text>
           </Pressable>
         </>
       )}
@@ -148,7 +168,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     padding: 24,
-    paddingTop:90,  // 상단 여백
+    paddingTop:80,  // 상단 여백
     backgroundColor: '#fff',
   },
 
@@ -174,6 +194,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#D1D5DB',
     paddingVertical: 8,
     fontSize: 16,
+    height: 44,
     paddingRight: 36, // X 버튼 공간 확보
   },
 
@@ -195,6 +216,13 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 8,
     alignItems: 'center',
+    width: '100%',  // 전체 가로폭 사용
+  },
+  
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 
   buttonActive: {
@@ -205,29 +233,42 @@ const styles = StyleSheet.create({
     backgroundColor: '#9CA3AF', // 회색 (비활성화)
   },
 
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+  resendButton: {
+    backgroundColor: '#F3F4F6', // 연한 회색
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    alignSelf: 'center', // 버튼 자체를 가운데 정렬
+  },
+
+  resendButtonText: {
+    fontSize: 11,
   },
 
   timer: {
     fontSize: 14,
     color: '#EF4444',
     marginTop: 12,
+    textAlign: 'center',
+    marginBottom: 8,
   },
 
   resend: {
-    fontSize: 14,
-    color: '#2563EB',
-    marginTop: 12,
+    fontSize: 12,
+    marginTop: 10,
     textAlign: 'center',
+    textDecorationLine: 'underline',
   },
 
   errorText: {
     color: '#EF4444',
-    fontSize: 13,
+    fontSize: 10,
     marginTop: 4,
+  },
+
+  errorLabel: {
+    color: '#EF4444',
+    fontSize: 8,
   },
 
   inputError: {
