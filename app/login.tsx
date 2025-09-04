@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
+
 export default function LoginScreen() {
   const router = useRouter();
 
@@ -32,7 +33,7 @@ export default function LoginScreen() {
 
   // 인증번호 전송
   const handleSendCode = () => {
-    if (phone.length < 10 || phone.length > 11 || phone.slice(0, 3) !== '010') {
+    if (phone.length < 11 || phone.slice(0, 3) !== '010') {
       setError('앗, 휴대폰 번호가 맞지 않아요.');
       return;
     }
@@ -90,6 +91,7 @@ export default function LoginScreen() {
               value={phone}
               onChangeText={setPhone}
               clearButtonMode="while-editing" // iOS 전용 X 버튼
+              maxLength={11}
             />
             {/* Android에서는 수동 X 버튼 */}
             {Platform.OS === 'android' && phone.length > 0 && (
@@ -106,7 +108,7 @@ export default function LoginScreen() {
           <Pressable
             style={[
               styles.button,
-              phone.length >= 10 ? styles.buttonActive : styles.buttonDisabled,
+              phone.length >= 11 ? styles.buttonActive : styles.buttonDisabled,
             ]}
             disabled={phone.length < 10}
             onPress={handleSendCode}
@@ -179,7 +181,7 @@ const styles = StyleSheet.create({
   },
 
   subtitle: {
-    fontSize: 8,
+    fontSize: 10,
     borderBottomColor: '#D1D5DB',
     left: 3,
   },
@@ -207,7 +209,7 @@ const styles = StyleSheet.create({
   },
 
   clearText: {
-    fontSize: 14,
+    fontSize: 15,
     color: '#9CA3AF',
   },
 
@@ -262,7 +264,7 @@ const styles = StyleSheet.create({
 
   errorText: {
     color: '#EF4444',
-    fontSize: 10,
+    fontSize: 11,
     marginTop: 4,
   },
 
