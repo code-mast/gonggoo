@@ -29,6 +29,21 @@ export default function TabsLayout() {
         }}
       />
 
+      {/* 채팅 탭 */}
+      <Tabs.Screen
+        name="chat"
+        options={{
+          title: '채팅',
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? 'chatbox' : 'chatbox-outline'}
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />  
+
       {/* 마이페이지 탭 - 항상 마지막 */}
       <Tabs.Screen
         name="mypage"
